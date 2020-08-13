@@ -17,37 +17,39 @@ function setQuestion () {
 showQuestion(shuffledQuestions[currentQuestionIndex]);
 }
 
-//displays question and choices
-function showQuestion (question) {
-  $('#home').addClass('hide')
-  $('#question-container').removeClass('hide')
-  $('#question-container').html (
-    `<div id="score-and-question"><p><strong>Question:  ${currentQuestionIndex
+//Template to generate question
+function generateQuestion () {
+return `<div id="score-and-question"><p><strong>Question:  ${currentQuestionIndex
     + 1}/${questions.length}</p>
     <p>Score:  ${score}/${questions.length}</strong></p></div>
     <form id="form">
-    <h3>"${question.question}"</h3>
+    <h3>"${questions[currentQuestionIndex].question}"</h3>
     <label>
-    <input type="radio" name= "answer" value="${question.choices[0]}" checked tabindex="1">${question.choices[0]}
+    <input type="radio" name= "answer" value="${questions[currentQuestionIndex].choices[0]}" checked tabindex="1">${questions[currentQuestionIndex].choices[0]}
     </label>
    <label>
-    <input type="radio" name="answer" value="${question.choices[1]}" tabindex="2">${question.choices[1]}
+    <input type="radio" name="answer" value="${questions[currentQuestionIndex].choices[1]}" tabindex="2">${questions[currentQuestionIndex].choices[1]}
     </label>
     <label>
-    <input type="radio" name="answer" value="${question.choices[2]}">${question.choices[2]}
+    <input type="radio" name="answer" value="${questions[currentQuestionIndex].choices[2]}">${questions[currentQuestionIndex].choices[2]}
     </label> 
     <label>
-    <input type="radio" name="answer" value="${question.choices[3]}">${question.choices[3]}
+    <input type="radio" name="answer" value="${questions[currentQuestionIndex].choices[3]}">${questions[currentQuestionIndex].choices[3]}
     </label>
      <button id= "submit" type="submit" value="Submit">Submit</button>
     </form>
-        `)
+    `
+}
+
+//displays question and choices
+function showQuestion () {
+  $('.container').html (generateQuestion);
 }
 
 
 //Listens for choice selection after submit button has been pressed. If selection is correct, the score variable is incremented by 1
 function submitAnswer(){
-  $('#question-container').on('submit',function(event){
+  $('.container').on('submit',function(event){
     event.preventDefault();
     let selectedOption = $('input:checked').val();
     let correct = questions[currentQuestionIndex].answer;
@@ -62,39 +64,37 @@ function submitAnswer(){
 nextQuestion()
 }
 
-
-//Displays message if answer is correct
-function correctAnswer() {
-  $('#form').addClass('hide')
-      $('#score-and-question').addClass('hide'
-      )      
- $('.container').addClass('correct')
- $('#question-container').append(
-         `<strong><h2> That's Right! </h2>
+//Template for the display when the user input was correct
+function correctDisplay () {
+  return `<strong><h2> That's Right! </h2>
          <div class="next-qtn">
          <button id="next" type="submit">Next</button>
          </div>`
-       )
+}
+
+//Template for the display when the user input was incorrect
+function incorrectDisplay () {
+  return `<strong><h2> Oops! </h2>
+         <h3>The correct answer was "${questions[currentQuestionIndex].answer}"</h3>
+         <div class="next-qtn">
+         <button id="next" type="submit">Next</button>
+         </div>`
+}
+//Displays message if answer is correct
+function correctAnswer() {  
+ $('.container').addClass('correct')
+ $('.container').append(correctDisplay)
 }
 
 //Displays message if answer is incorrect
 function wrongAnswer() {
  $('.container').addClass('wrong')
- $('#score-and-question').addClass('hide'
-      )     
- $('#form').addClass('hide')
- $('#question-container').append(
-         `<strong><h2> Oops! </h2>
-         <h3>The correct answer was "${questions[currentQuestionIndex].answer}"</h3>
-         <div class="next-qtn">
-         <button id="next" type="submit">Next</button>
-         </div>`
-       )
+ $('.container').append(incorrectDisplay)
 }
 
 //Listens for next button to be pressed. Sets next question if there is one. Otherwise, displays final score.
 function nextQuestion () {
-$('#question-container').on('click', '#next', function (event) {
+$('.container').on('click', '#next', function (event) {
   $('.container').removeClass('correct')
   $('.container').removeClass('wrong')
   event.preventDefault();
@@ -107,24 +107,30 @@ finalScore()
 })
 }
 
-//Display page for end of quiz, showing final score and restart button.
-function finalScore () {
-  if (score>= questions.length - 2) {
-$('#question-container').html(
-  ` <h2>Nice One!</h2>
+//Template for end page when user achieves a high score
+function finalSuccess () {
+return ` <h2>Nice One!</h2>
   <h3>Your Final Score is: ${score}/${questions.length}</h3>
   <div class="restart">
   <button id="restart">Restart</button>
   </div>`
-)
- } else  {
-   $('#question-container').html(`
+}
+//Template for end page when user gets a low score
+function finalFail () {
+return `
    <h3>Your Final Score is: ${score}/${questions.length}</h3>
    <div class="restart">
    <h2>Press Restart to try again!</h2>
   <button id="restart">Restart</button>
   </div>
-  `)
+  `
+}
+//Display page for end of quiz, showing final score and restart button.
+function finalScore () {
+  if (score >= questions.length - 2) {
+$('.container').html(finalSuccess)
+ } else  {
+   $('.container').html(finalFail)
 }
 resetStats()
 restartQuiz()
