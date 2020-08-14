@@ -68,20 +68,21 @@ nextQuestion()
 function correctDisplay () {
   return `<strong><h2> That's Right! </h2>
          <div class="next-qtn">
-         <button id="next" type="submit">Next</button>
+         <button id="next">Next</button>
          </div>`
-}
+};
+
 
 //Template for the display when the user input was incorrect
 function incorrectDisplay () {
   return `<strong><h2> Oops! </h2>
          <h3>The correct answer was "${questions[currentQuestionIndex].answer}"</h3>
          <div class="next-qtn">
-         <button id="next" type="submit">Next</button>
+         <button id="next">Next</button>
          </div>`
 }
 //Displays message if answer is correct
-function correctAnswer() {  
+function correctAnswer(event) {  
  $('.container').addClass('correct')
  $('.container').append(correctDisplay)
 }
@@ -104,7 +105,7 @@ setQuestion()
 } else {
 finalScore()
 }
-})
+  })
 }
 
 //Template for end page when user achieves a high score
@@ -145,8 +146,8 @@ function restartQuiz() {
 
 //Resets score and question number variables to 0.
 function resetStats () {
-score=0
-currentQuestionIndex=0
+score=0;
+currentQuestionIndex=0;
 }
 
 //Begins Quiz upon click of start button
@@ -156,13 +157,15 @@ $("#home").on('click', '#start-btn', function (){
 })
 }
 
-
 function handleQuiz () {
 submitAnswer()
 startButton()
 }
 
 $(handleQuiz);
+
+
+
 
 
 
