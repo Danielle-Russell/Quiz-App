@@ -1,9 +1,9 @@
 //Empty global variables for incrementing
-let currentQuestionIndex= 0
+let currentQuestionIndex= 0;
 
-let shuffledQuestions= 0
+let shuffledQuestions= 0;
 
-let score = 0
+let score = 0;
 
 
 //Shuffles questions and displays
@@ -59,7 +59,7 @@ function submitAnswer(){
     } else {
        wrongAnswer()
     }
-     $('#submit').hide()
+     $('form').hide()
 })
 nextQuestion()
 }
